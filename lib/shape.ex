@@ -4,7 +4,7 @@ defmodule Shape do
   your data structures.
 
   Example Usage:
-<pre>
+
     iex> alias Shape, as: S
     nil
 
@@ -44,7 +44,6 @@ defmodule Shape do
 
     iex> S.validate([o: S.Int, b: S.Str], [o: "k", a: "ok"])
     {:error, ["a is not equal to b", "k is not a integer"]}
-</pre>
   """
 
   defp merge_errors(coll) do
@@ -84,6 +83,10 @@ defmodule Shape do
     rescue
       FunctionClauseError -> validate_list(shape, obj)
     end
+  end
+
+  def validate(shape, obj) when is_tuple(shape) do
+    validate_list(Tuple.to_list(shape), Tuple.to_list(obj))
   end
 
   def validate(shape, obj) when is_map(shape) do

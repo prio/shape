@@ -3,7 +3,7 @@ defmodule Shape.Mixfile do
 
   def project do
     [app: :shape,
-     version: "0.0.2",
+     version: "0.0.3",
      elixir: "~> 1.0",
      package: package,
      build_embedded: Mix.env == :prod,
