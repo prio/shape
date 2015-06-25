@@ -10,7 +10,7 @@ To use add
 to your mix dependencies.
 
 Example Usage:
-
+<pre>
   iex> alias Shape, as: S
   nil
 
@@ -50,3 +50,4 @@ Example Usage:
 
   iex> S.validate([o: S.Int, b: S.Str], [o: "k", a: "ok"])
   {:error, ["a is not equal to b", "k is not a integer"]}
+</pre>
