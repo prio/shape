@@ -1,7 +1,7 @@
 defmodule ShapeTest do
   use ExUnit.Case
   alias Shape, as: S
-  doctest Shape  
+  doctest Shape
 
   test "a number can be validated" do
     assert :ok == S.validate(S.Num, 42)
@@ -68,5 +68,31 @@ defmodule ShapeTest do
   test "a keyword list is checked (errors)" do
     {:error, errors} = S.validate([o: S.Int, b: S.Str], [o: "k", a: "ok"])
     assert 2 == Enum.count(errors)
+  end
+
+  test "nested map" do
+    shape = %{a: %{b: S.Str, c: S.Int},
+              d: [%{e: S.Atom, f: [S.Num]}]}
+    obj = %{a: %{b: "abc", c: 123},
+            d: [%{e: :bc, f: [12.2, 13, 100]},
+                %{e: :bc, f: [-1]}]}
+    assert :ok == S.validate(shape, obj)
+    data = %{a: %{b: 123, c: "ABC"}}
+
+    # :d missing-required-key
+    {:error, errors} = S.validate(shape, data)
+    assert 2 == Enum.count(errors)
+  end
+
+  test "validate a tuple" do
+    assert :ok == S.validate({S.Int, {S.Str, S.Float}}, {1, {"2", 3.0, "4", 5.0}})
+  end
+
+  test "shapes are just data" do
+    string_list = [S.Str]
+    string_scores = %{S.Str => S.Float}
+    string_score_map = [S.Int, string_scores]
+
+    assert :ok == S.validate(string_score_map, [1, %{"2" => 3.0, "3" => 5.0}])
   end
 end
