@@ -1,6 +1,7 @@
 defmodule ShapeTest do
   use ExUnit.Case
   alias Shape, as: S
+  doctest Shape  
 
   test "a number can be validated" do
     assert :ok == S.validate(S.Num, 42)
@@ -31,6 +32,16 @@ defmodule ShapeTest do
     assert 2 == Enum.count(errors)
   end
 
+  test "a single item list shape applies to all obj items (ok)" do
+    assert :ok == S.validate([S.Atom], [:a, :b, :c])
+
+  end
+
+  test "a single item list shape applies to all obj items (errors)" do
+    {:error, errors} = S.validate([S.Int], [0, :a, "b", 1])
+    assert 2 == Enum.count(errors)
+  end
+
   test "a map can be validated" do
     assert :ok == S.validate(%{S.Atom => S.Str}, %{o: "k"})
   end
@@ -41,4 +52,21 @@ defmodule ShapeTest do
     assert 2 == Enum.count(errors)
   end
 
+  test "a map keys values are checked (ok)" do
+    assert :ok == S.validate(%{:o => S.Str, "o" => S.Str}, %{:o => "k", "o" => "k"})
+  end
+
+  test "a maps keys are checked (errors)" do
+    {:error, errors} = S.validate(%{:b => S.Str, "o" => S.Str}, %{:o => "k", "o" => "k"})
+    assert 1 == Enum.count(errors)
+  end
+
+  test "a keyword list is checked (ok)" do
+    assert :ok == S.validate([o: S.Str, a: S.Str], [o: "k", a: "ok"])
+  end
+
+  test "a keyword list is checked (errors)" do
+    {:error, errors} = S.validate([o: S.Int, b: S.Str], [o: "k", a: "ok"])
+    assert 2 == Enum.count(errors)
+  end
 end
