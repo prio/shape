@@ -1,13 +1,7 @@
 defmodule Shape do
   @moduledoc """
-  Shape is library that allows you to declaritivly describe and validate
+  Shape is library that allows you to declaratively describe and validate
   your data structures.
-
-  To use add
-
-    [{:shape, "0.0.2"}]
-
-  to your mix dependencies.
 
   Example Usage:
 <pre>
